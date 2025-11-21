@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Сервіс нашого додатку
+  radio-app:
+    build: .
+    container_name: radio-service
+    ports:
+      - "8080:8080" # Прокидаємо порт назовні
+    depends_on:
+      - mongo # Чекаємо, поки запуститься база
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/radio-db
+
+  # Сервіс бази даних MongoDB
+  mongo:
+    image: mongo:latest
+    container_name: radio-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db # Зберігаємо дані, щоб не зникали при перезапуску
+
+# Том для постійного зберігання даних бази
+volumes:
+  mongo-data:
